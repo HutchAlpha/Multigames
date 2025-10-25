@@ -1,3 +1,6 @@
 [submodule "Calculaton"]
 	path = Calculaton
 	url = https://github.com/HutchAlpha/Calculaton
+[submodule "TradGames"]
+	path = TradGames
+	url = https://github.com/HutchAlpha/TradGames
