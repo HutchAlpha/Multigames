@@ -35,7 +35,7 @@
                         <p>Jeu de calcul mental amusant et rapide.</p>
                     </div>
                 </a>
-                <a class="game-card" href="../Démineur/index.html">
+                <a class="game-card" href="../DemineurGames/index.html">
                     <img src="img/Demineur.jpeg" alt="Démineur" class="game-img" onerror="this.src='img/placeholder.png'">
                     <div class="game-info">
                         <h4>Démineur</h4>
