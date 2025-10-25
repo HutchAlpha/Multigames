@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>DeminGames</title>
+    <meta charset="UTF-8" />
+    <link href="style.css" type="text/css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="demineur.jpeg">
+    <style>
+    .back-btn {
+        display: inline-block;
+        margin: 18px 0 0 18px;
+        padding: 10px 22px;
+        background: #2563eb;
+        color: #fff;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1.08em;
+        box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+        transition: background 0.15s, transform 0.13s;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 10;
+    }
+    .back-btn:hover {
+        background: #1e40af;
+        transform: translateY(-2px) scale(1.03);
+        color: #dbeafe;
+    }
+    @media (max-width: 600px) {
+        .back-btn {
+            margin: 10px 0 0 6px;
+            padding: 8px 12px;
+            font-size: 0.98em;
+        }
+    }
+    </style>
+</head>
+<body>
+    <a href="/index.php" class="back-btn">&#8592; Retour à l'accueil</a>
+    <div class="page">
+        <div class="center"><img class="image" src="demineur.jpeg"></div>
+        <h1 class="center">Jeux de Démineur (DeminGames)</h1>
+        <h3>Règle du jeu <button id="toggleButton">></button></h3>
+        <div class="zoneTexte optionHide" id="regleDuJeu">
+            <p>Le but du démineur est de désamorcer toutes les mines présentes sur un terrain de jeu en utilisant la logique et des déductions basées sur les chiffres révélés.</p>
+            <p>Le joueur doit éviter de cliquer sur les cases contenant des mines, car cela entraînerait une explosion et la fin de la partie.</p>
+            <p>En analysant les nombres indiqués sur les cases découvertes, qui représentent le nombre de mines adjacentes, le joueur peut déterminer l'emplacement des mines potentielles et marquer ces cases avec des drapeaux.</p>
+            <p>L'objectif ultime est de marquer toutes les mines et de découvrir toutes les cases sûres pour remporter la partie avec succès, en faisant preuve de prudence et de stratégie.</p>
+            <p>Chaque case trouvée sans bombes te permet de gagner 100 points.</p>
+        </div>
+        <br />
+
+        <div class="center">
+        <audio id="audio-player" controls>
+            <source src="musiqueDemineur.mp3" type="audio/mpeg">
+            Votre navigateur ne supporte pas la lecture de fichiers audio.
+        </audio></div>
+
+        <audio id="mineSound" src="explosion.mp3"></audio>
+        <audio id="caseGood" src="block.wav"></audio>
+        <audio id="flag" src="flag.wav"></audio>
+        <audio id="startSound" src="debut.mp3"></audio>
+
+        <br />
+
+        <div class="menus">
+            <button class="audio" onclick="increaseVolume()">+</button>
+            <button class="control" onclick="play()">Play</button>
+            <button class="control" onclick="stop()">Stop</button>
+            <button class="audio" onclick="decreaseVolume()">-</button>
+        </div>
+        <br />
+        <span class="center" id="mines"></span>
+        <br />
+
+        <div class="plateau" id="plateau"></div>
+
+        <br />
+        <div class="score">
+            <div class="score" id="score">Score: 0</div>
+            <h1 style="margin-top: 0px;margin-bottom: 0px;"id="result" class="result"></h1>
+
+        </div>
+        <br />
+
+        <div class="menus">
+            <button class="menuFacile" id="facileBtn" data-difficulty="facile">Facile</button>
+            <button class="menuNormal" id="normalBtn" data-difficulty="normal">Normal</button>
+            <button class="menuDifficile" id="diffBtn" data-difficulty="difficile">Difficile</button>
+            <button class="menuPerso" id="persoBtn" data-difficulty="perso">Personnalisé</button>    
+        </div>
+
+        <br />
+
+        <div class="menus">
+            <button id="resetButton" onclick="Demineur.resetGame(); Demineur.drawGameBoard();">Réinitialiser</button>
+        </div>
+
+        <p>Créer par <strong> HutchAlpha</strong></p>
+
+    </div>
+
+    <script src="css.js"></script>
+    <script src="demineur.js"></script>
+
+    <script>
+        
+    function play() {
+        var audio = document.getElementById("audio-player");
+        audio.play();
+    }
+
+    function stop() {
+        var audio = document.getElementById("audio-player");
+        audio.pause();
+        audio.currentTime = 0;
+    }
+
+    function increaseVolume() {
+        const audio = document.getElementById("audio-player");
+        if (audio.volume < 1) {
+            audio.volume += 0.1;
+        }
+    }
+
+    function decreaseVolume() {
+        const audio = document.getElementById("audio-player");
+        if (audio.volume > 0) {
+            audio.volume -= 0.1;
+        }
+    }
+        document.addEventListener("DOMContentLoaded", function() {
+            var button = document.getElementById("toggleButton");
+            var zoneTexte = document.getElementById("regleDuJeu");
+        
+            button.addEventListener("click", function() {
+                if (zoneTexte.classList.contains("optionHide")) {
+                    zoneTexte.classList.remove("optionHide");
+                    zoneTexte.style.display = "block";
+                    button.textContent = "v"; 
+                } else {
+                    zoneTexte.classList.add("optionHide");
+                    zoneTexte.style.display = "none";
+                    button.textContent = ">"; 
+                }
+            });
+        
+            var menuPerso = document.getElementById('persoBtn');
+            menuPerso.addEventListener('click', function() {
+                var difficulty = this.getAttribute('data-difficulty');
+                var lignes = parseInt(prompt("Nombre de lignes :"));
+                var colonnes = parseInt(prompt("Nombre de colonnes :"));
+                var mines = parseInt(prompt("Nombre de mines :"));
+        
+                Demineur.niveau[difficulty].lignes = lignes;
+                Demineur.niveau[difficulty].colonnes = colonnes;
+                Demineur.niveau[difficulty].mines = mines;
+        
+                Demineur.startGame(difficulty);
+            });
+        
+            facileBtn.addEventListener('click', function() {
+                Demineur.startGame('facile');
+            });
+        
+            normalBtn.addEventListener('click', function() {
+                Demineur.startGame('normal');
+            });
+        
+            diffBtn.addEventListener('click', function() {
+                Demineur.startGame('difficile');
+            });
+        });
+        </script>
+        
+
+</body>
+</html>

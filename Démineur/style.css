@@ -1,0 +1,11 @@
+
+/* jeux de démineur*/
+.field {background:#a9a0a0; }
+.field .cell {width:30px; height:30px; background:#33CC33; cursor:pointer; border-left:solid 1px #666666; border-top:solid 1px #666666; border-right:solid 1px #aaaaaa; border-bottom:solid 1px #aaaaaa;}
+.field .cell:hover { background:#338833;}
+.field .cell.bomb {background:#cc3333; cursor:default;}
+.field .cell.bomb:hover {background:#cc3333;}
+.field .cell.clear {background:none; cursor:default; color:white; font-weight:bold; text-align:center;}
+.field .cell.clear:hover {background:none;}
+.field .cell.marked {background:#14F1F5; color:white; font-weight:bold; text-align:center; content:"!";}
+.field .cell.marked:hover {background:#333388;}
